@@ -3,6 +3,7 @@ import { getCurrentUser } from "@/lib/auth";
 import PriceChart from "@/components/PriceChart";
 import ProductChat from "@/components/ProductChat";
 import ComparisonTable from "@/components/ComparisonTable";
+import ReviewsSection from "@/components/ReviewsSection";
 import TrackButton from "@/components/TrackButton";
 import { notFound } from "next/navigation";
 
@@ -110,57 +111,97 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
 
   return (
     <main className="mx-auto max-w-4xl px-6 py-10">
-      <div className="flex items-start justify-between gap-4">
+      {/* ── Header ── */}
+      <div className="flex items-start justify-between gap-4 mb-8">
         <div>
-          <a href={product.source_url} target="_blank" rel="noreferrer" className="text-sm text-signal underline">
-            View on original site ↗
+          <a
+            href={product.source_url}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-1 text-xs font-medium text-indigo-400 hover:text-indigo-300 transition-colors"
+          >
+            View on original site
+            <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
           </a>
-          <h1 className="font-display text-2xl md:text-3xl mt-2 mb-1">{product.title}</h1>
+          <h1 className="font-display text-2xl md:text-3xl font-bold text-white mt-2 mb-1">
+            {product.title}
+          </h1>
           {product.rating && (
-            <p className="text-ink/60 text-sm">
-              {Number(product.rating).toFixed(1)} ★ ({product.rating_count?.toLocaleString("en-IN")} ratings)
+            <p className="text-white/40 text-sm flex items-center gap-1.5">
+              <span className="text-amber-400">★</span>
+              {Number(product.rating).toFixed(1)}
+              <span className="text-white/25">·</span>
+              {product.rating_count?.toLocaleString("en-IN")} ratings
             </p>
           )}
         </div>
         <TrackButton productId={product.id} initiallyTracked={isTracked} signedIn={!!user} />
       </div>
 
-      <div className="grid md:grid-cols-3 gap-3 my-10">
-        <div className="border border-ink/10 rounded-lg p-4 bg-white">
-          <p className="text-ink/50 text-xs uppercase tracking-wide">Best price now</p>
-          <p className="font-display text-2xl mt-1">
+      {/* ── Stat cards ── */}
+      <div className="grid md:grid-cols-3 gap-4 mb-12">
+        <div className="rounded-2xl glass-card p-5">
+          <p className="text-white/30 text-xs uppercase tracking-wider font-semibold mb-1">Best price now</p>
+          <p className="font-display text-2xl font-bold text-white">
             {bestDeal?.price != null ? `₹${bestDeal.price.toLocaleString("en-IN")}` : "—"}
           </p>
-          {bestDeal && <p className="text-xs text-signal mt-1 capitalize">on {bestDeal.platform}</p>}
+          {bestDeal && (
+            <p className="text-xs text-indigo-400 mt-1 capitalize flex items-center gap-1">
+              <span className="h-1.5 w-1.5 rounded-full bg-indigo-400" />
+              on {bestDeal.platform}
+            </p>
+          )}
         </div>
-        <div className="border border-ink/10 rounded-lg p-4 bg-white">
-          <p className="text-ink/50 text-xs uppercase tracking-wide">Lowest tracked</p>
-          <p className="font-display text-2xl mt-1">{lowest ? `₹${lowest.toLocaleString("en-IN")}` : "—"}</p>
+        <div className="rounded-2xl glass-card p-5">
+          <p className="text-white/30 text-xs uppercase tracking-wider font-semibold mb-1">Lowest tracked</p>
+          <p className="font-display text-2xl font-bold text-emerald-400">
+            {lowest ? `₹${lowest.toLocaleString("en-IN")}` : "—"}
+          </p>
         </div>
-        <div className="border border-ink/10 rounded-lg p-4 bg-white">
-          <p className="text-ink/50 text-xs uppercase tracking-wide">Highest tracked</p>
-          <p className="font-display text-2xl mt-1">{highest ? `₹${highest.toLocaleString("en-IN")}` : "—"}</p>
+        <div className="rounded-2xl glass-card p-5">
+          <p className="text-white/30 text-xs uppercase tracking-wider font-semibold mb-1">Highest tracked</p>
+          <p className="font-display text-2xl font-bold text-red-400">
+            {highest ? `₹${highest.toLocaleString("en-IN")}` : "—"}
+          </p>
         </div>
       </div>
 
+      {/* ── Comparison ── */}
       <section className="mb-12">
         <ComparisonTable productId={product.id} initialListings={listings} />
       </section>
 
+      {/* ── Price History ── */}
       <section className="mb-12">
-        <h2 className="font-display text-xl mb-4">
+        <h2 className="font-display text-xl font-bold text-white mb-4 flex items-center gap-2">
+          <svg className="h-5 w-5 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+          </svg>
           Price history
           {historyData.platform && (
-            <span className="ml-2 text-sm text-ink/50 capitalize">· {historyData.platform}</span>
+            <span className="text-sm font-normal text-white/30 capitalize">· {historyData.platform}</span>
           )}
         </h2>
-        <div className="border border-ink/10 rounded-lg bg-white p-4">
+        <div className="rounded-2xl glass-card p-5">
           <PriceChart history={history} />
         </div>
       </section>
 
-      <section>
-        <h2 className="font-display text-xl mb-4">Ask about this product</h2>
+      {/* ── Reviews ── */}
+      <section className="mb-12">
+        <ReviewsSection productId={product.id} />
+      </section>
+
+      {/* ── Chat ── */}
+      <section className="mb-8">
+        <h2 className="font-display text-xl font-bold text-white mb-4 flex items-center gap-2">
+          <svg className="h-5 w-5 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+          </svg>
+          Ask about this product
+        </h2>
         <ProductChat productId={product.id} />
       </section>
     </main>

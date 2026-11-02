@@ -14,6 +14,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <ClerkProvider>
       <html lang="en">
         <body className="bg-paper text-ink font-body antialiased">
+          <div className="gradient-bg" aria-hidden="true" />
+          <div className="orb-3" aria-hidden="true" />
           <NavBar />
           {children}
         </body>

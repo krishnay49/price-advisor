@@ -5,18 +5,19 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        ink: "#12151B",
-        paper: "#F7F6F3",
-        signal: "#2F6F4F",
-        alert: "#B4452C"
+        ink: "#e8eaf0",
+        paper: "#0b0f1a",
+        signal: "#818cf8",
+        alert: "#f87171",
+        surface: "#141829",
       },
       fontFamily: {
-        display: ["'Fraunces'", "serif"],
-        body: ["'Inter'", "sans-serif"]
-      }
-    }
+        display: ["'Inter'", "sans-serif"],
+        body: ["'Inter'", "sans-serif"],
+      },
+    },
   },
-  plugins: []
+  plugins: [],
 };
 
 export default config;

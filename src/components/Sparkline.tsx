@@ -1,8 +1,3 @@
-/**
- * Plain SVG rather than a chart library: the dashboard renders one of these
- * per tracked product, and Recharts' ResponsiveContainer is heavy for a
- * 112x40 decoration with no axes or tooltips.
- */
 export default function Sparkline({ values, down }: { values: number[]; down: boolean }) {
   if (values.length < 2) {
     return <div className="h-10 w-28" />;
@@ -22,12 +17,20 @@ export default function Sparkline({ values, down }: { values: number[]; down: bo
     })
     .join(" ");
 
+  const gradientId = `sparkGrad-${down ? "down" : "up"}`;
+
   return (
     <svg width={width} height={height} className="shrink-0" aria-hidden="true">
+      <defs>
+        <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={down ? "#818cf8" : "#f87171"} stopOpacity={0.3} />
+          <stop offset="100%" stopColor={down ? "#818cf8" : "#f87171"} stopOpacity={0} />
+        </linearGradient>
+      </defs>
       <polyline
         points={points}
         fill="none"
-        stroke={down ? "#2F6F4F" : "#B4452C"}
+        stroke={down ? "#818cf8" : "#f87171"}
         strokeWidth="2"
         strokeLinejoin="round"
         strokeLinecap="round"

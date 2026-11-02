@@ -1,11 +1,7 @@
 node_modules/
 .next/
-out/
-build/
-dist/
+.vercel/
 
 .env
-.env.local
-.env.*.local
-
-.vercel/
+.env.*
+!.env.example
